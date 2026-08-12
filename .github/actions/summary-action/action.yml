@@ -19,5 +19,5 @@ runs:
       id: compute
       shell: bash
       run: |
-        summary=$(printf '%s' '${{ inputs.numbers }}' | python3 ${{ github.action_path }}/../../../ci/compute_summary.py)
+        summary=$(printf '%s' '${{ inputs.numbers }}' | python3 ${{ github.action_path }}/../../../ci/print__summary.py)
         echo "summary=$summary" >> $GITHUB_OUTPUT
