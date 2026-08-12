@@ -1,19 +1,23 @@
-name: Use summary action
+name: "Summary Action"
+description: "Computes a summary of a list of numbers"
 
-on: [workflow_dispatch]
+inputs:
+  numbers:
+    description: "JSON array of numbers as a string"
+    required: true
+    default: "[1,2,3]"
 
-jobs:
-  call-summary:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+outputs:
+  summary:
+    description: "Summary produced by the composite action (JSON)"
+    value: ${{ steps.compute.outputs.summary }}
 
-      - name: Call summary composite action
-        id: summary
-        uses: ./.github/actions/summary-action
-        with:
-          numbers: "[10, 20, 30, 40]"
-
-      - name: Print action output
-        run: |
-          echo "Summary output: ${{ steps.summary.outputs.summary }}"
+runs:
+  using: "composite"
+  steps:
+    - name: Compute summary
+      id: compute
+      shell: bash
+      run: |
+        summary=$(python3 ./ci/compute_summary.py '${{ inputs.numbers }}')
+        echo "summary=$summary" >> $GITHUB_OUTPUT
