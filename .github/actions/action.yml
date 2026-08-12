@@ -1,0 +1,25 @@
+name: "Summary Action"
+description: "Computes a summary of a list of numbers"
+
+inputs:
+  numbers:
+    description: "JSON array of numbers as a string"
+    required: true
+    default: "[1,2,3]"
+
+outputs:
+  summary:
+    description: "Summary produced by the composite action (JSON)"
+    value: ${{ steps.compute.outputs.summary }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Compute summary
+      id: compute
+      shell: bash
+      run: |
+        # her kører du logikken der beregner summary
+        # ud fra input 'numbers' og sætter output 'summary'
+        summary=$(python3 ./ci/compute_summary.py '${{ inputs.numbers }}')
+        echo "summary=$summary" >> $GITHUB_OUTPUT
